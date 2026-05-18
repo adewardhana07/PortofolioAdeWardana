@@ -34,7 +34,7 @@ body {
 }
 
 /* ========================================
-   CUSTOM CURSOR
+   CUSTOM CURSOR (Desktop Only)
    ======================================== */
 .cursor-dot {
     width: 6px;
@@ -1133,41 +1133,70 @@ body {
 }
 
 /* ========================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN - ALL ANDROID DEVICES
    ======================================== */
+
+/* Tablet & HP Landscape (max-width: 992px) */
 @media (max-width: 992px) {
-    .hero .container,
-    .about-wrapper,
-    .skills-wrapper {
+    .container {
+        padding: 0 30px;
+    }
+    
+    .hero .container {
         grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
     }
     
     .hero-visual {
         display: none;
     }
     
+    .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+    }
+    
+    .about-wrapper {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .skills-wrapper {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
     .projects-grid {
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
     }
     
     .achievements-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
     }
     
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .name-glow {
-        font-size: 3rem;
+    .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
+/* HP Besar (max-width: 768px) */
 @media (max-width: 768px) {
     .container {
         padding: 0 20px;
     }
     
+    /* Navbar Mobile */
     .nav-toggle {
         display: flex;
     }
@@ -1182,41 +1211,141 @@ body {
         text-align: center;
         padding: 30px 0;
         gap: 20px;
-        transition: all 0.3s;
+        transition: all 0.3s ease;
         border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+        z-index: 999;
     }
     
     .nav-menu.active {
         left: 0;
     }
     
-    .hero-buttons {
-        flex-direction: column;
+    .nav-brand {
+        font-size: 1.4rem;
     }
     
-    .btn-primary, .btn-outline {
-        text-align: center;
-        justify-content: center;
+    /* Hero Section Mobile */
+    .hero {
+        padding: 100px 0 50px;
     }
     
-    .section-title {
+    .hero-title {
         font-size: 2rem;
     }
     
-    .achievements-grid {
+    .name-glow {
+        font-size: 2.2rem;
+    }
+    
+    .greeting {
+        font-size: 1rem;
+    }
+    
+    .typing-wrapper {
+        font-size: 1rem;
+    }
+    
+    .hero-desc {
+        font-size: 0.9rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn-primary, .btn-outline {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+    }
+    
+    .hero-stats {
+        gap: 30px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    /* Section Title Mobile */
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .section-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .section-line {
+        width: 50px;
+    }
+    
+    /* About Mobile */
+    .about {
+        padding: 60px 0;
+    }
+    
+    .about-card {
+        padding: 20px;
+    }
+    
+    .biodata-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+    
+    .biodata-icon {
+        margin: 0 auto;
+    }
+    
+    .biodata-content {
+        text-align: center;
+    }
+    
+    .card-header {
+        justify-content: center;
+    }
+    
+    .quote-box p {
+        font-size: 0.85rem;
+    }
+    
+    /* Projects Mobile */
+    .projects {
+        padding: 60px 0;
+    }
+    
+    .search-box {
+        max-width: 100%;
+    }
+    
+    .search-box input {
+        padding: 12px 40px 12px 40px;
+        font-size: 0.9rem;
+    }
+    
+    .projects-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
     
-    .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .project-info h3 {
+        font-size: 1.1rem;
     }
     
-    .cursor-dot, .cursor-outline {
-        display: none;
+    .project-info p {
+        font-size: 0.85rem;
     }
     
-    body {
-        cursor: auto;
+    .project-tech span {
+        font-size: 0.65rem;
+        padding: 3px 8px;
     }
     
     .project-actions {
@@ -1227,15 +1356,183 @@ body {
     .action-btn {
         width: 100%;
     }
+    
+    .project-overlay {
+        opacity: 1;
+        background: rgba(0,0,0,0.7);
+    }
+    
+    .project-link {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+    
+    /* Skills Mobile */
+    .skills {
+        padding: 60px 0;
+    }
+    
+    .skills-card {
+        padding: 20px;
+    }
+    
+    .skills-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .skill-info {
+        font-size: 0.8rem;
+    }
+    
+    .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .tool-item {
+        padding: 12px;
+    }
+    
+    .tool-item i {
+        font-size: 1.3rem;
+    }
+    
+    .tool-item span {
+        font-size: 0.65rem;
+    }
+    
+    .soft-skills {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .soft-item {
+        font-size: 0.85rem;
+    }
+    
+    /* Achievements Mobile */
+    .achievements {
+        padding: 60px 0;
+    }
+    
+    .achievements-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .achievement-card {
+        padding: 20px;
+    }
+    
+    .achievement-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .achievement-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .achievement-card h3 {
+        font-size: 1rem;
+    }
+    
+    /* Contact Mobile */
+    .contact {
+        padding: 60px 0;
+    }
+    
+    .contact-card-large {
+        padding: 20px;
+    }
+    
+    .contact-item {
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .contact-icon {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .contact-icon i {
+        font-size: 1.1rem;
+    }
+    
+    .contact-detail h4 {
+        font-size: 0.75rem;
+    }
+    
+    .contact-detail p {
+        font-size: 0.85rem;
+    }
+    
+    /* Footer Mobile */
+    .footer {
+        padding: 40px 0 20px;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .footer-links {
+        justify-content: center;
+        gap: 20px;
+    }
+    
+    .footer-links a {
+        font-size: 0.8rem;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+    
+    .footer-bottom p {
+        font-size: 0.7rem;
+    }
+    
+    /* Hide Custom Cursor on Mobile */
+    .cursor-dot, .cursor-outline {
+        display: none !important;
+    }
+    
+    body {
+        cursor: auto;
+    }
+    
+    /* Touch-friendly adjustments */
+    button, a, .project-card, .contact-item, .tool-item {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    button:active, a:active, .project-card:active {
+        transform: scale(0.98);
+        transition: transform 0.1s;
+    }
+    
+    input, textarea {
+        font-size: 16px !important;
+    }
 }
 
+/* HP Kecil (max-width: 480px) */
 @media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+    
     .hero-title {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
     
     .name-glow {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
     }
     
     .hero-stats {
@@ -1243,31 +1540,55 @@ body {
     }
     
     .stat-number {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
     
-    .projects-grid {
-        grid-template-columns: 1fr;
+    .section-title {
+        font-size: 1.5rem;
     }
     
     .tools-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .soft-skills {
-        grid-template-columns: 1fr;
-    }
-    
-    .footer-content {
-        flex-direction: column;
+    .contact-item {
+        flex-wrap: wrap;
+        justify-content: center;
         text-align: center;
     }
     
-    .footer-links {
-        justify-content: center;
+    .contact-icon {
+        margin: 0 auto;
     }
     
-    .footer-social {
-        justify-content: center;
+    .contact-detail {
+        text-align: center;
+    }
+}
+
+/* Landscape mode untuk HP */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding: 80px 0 40px;
+    }
+    
+    .hero-visual {
+        display: none;
+    }
+    
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Scroll indicator sembunyikan di mobile */
+@media (max-width: 768px) {
+    .scroll-indicator {
+        display: none;
     }
 }
