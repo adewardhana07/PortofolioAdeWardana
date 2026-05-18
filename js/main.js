@@ -33,8 +33,7 @@ if (window.innerWidth > 768) {
             cursorOutline.style.transform = `translate3d(${outlineX - 17}px, ${outlineY - 17}px, 0)`;
         });
         
-        // Hover effects
-        const hoverElements = document.querySelectorAll('a, button, .project-card, .btn-primary, .btn-outline, .filter-btn, .tool-item');
+        const hoverElements = document.querySelectorAll('a, button, .project-card, .btn-primary, .btn-outline, .tool-item, .contact-item');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 cursorOutline.style.width = '60px';
@@ -71,7 +70,6 @@ if (navToggle) {
     });
 }
 
-// Close mobile menu on link click
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
         navToggle?.classList.remove('active');
@@ -178,126 +176,215 @@ const observer = new IntersectionObserver((entries) => {
 
 progressBars.forEach(bar => observer.observe(bar));
 
-// Project Filter
-const filterBtns = document.querySelectorAll('.filter-btn');
-const projectItems = document.querySelectorAll('.project-card');
+// ========================================
+// SEARCH FUNCTIONALITY
+// ========================================
+const searchInput = document.getElementById('searchInput');
+const clearBtn = document.getElementById('searchClear');
+const projectCards = document.querySelectorAll('.project-card');
 
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
         
-        const filterValue = btn.getAttribute('data-filter');
+        // Show/hide clear button
+        if (searchTerm.length > 0) {
+            clearBtn.style.display = 'flex';
+        } else {
+            clearBtn.style.display = 'none';
+        }
         
-        projectItems.forEach(item => {
-            if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
-                item.style.display = 'block';
-                setTimeout(() => {
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0)';
-                }, 50);
+        // Filter projects
+        projectCards.forEach(card => {
+            const projectName = card.getAttribute('data-name') || '';
+            const title = card.querySelector('h3')?.innerText.toLowerCase() || '';
+            const desc = card.querySelector('p')?.innerText.toLowerCase() || '';
+            
+            if (title.includes(searchTerm) || desc.includes(searchTerm) || projectName.includes(searchTerm)) {
+                card.style.display = 'block';
+                card.style.animation = 'fadeInUp 0.5s ease';
             } else {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    item.style.display = 'none';
-                }, 300);
+                card.style.display = 'none';
             }
         });
+        
+        // Show message if no results
+        const visibleCards = document.querySelectorAll('.project-card[style*="display: block"], .project-card:not([style*="display: none"])');
+        let noResultMsg = document.querySelector('.no-result');
+        
+        if (visibleCards.length === 0 && projectCards.length > 0) {
+            if (!noResultMsg) {
+                noResultMsg = document.createElement('div');
+                noResultMsg.className = 'no-result';
+                noResultMsg.innerHTML = `
+                    <i class="fas fa-search"></i>
+                    <p>Tidak ada project yang ditemukan untuk "${searchTerm}"</p>
+                `;
+                document.querySelector('.projects-grid').after(noResultMsg);
+            }
+        } else {
+            if (noResultMsg) noResultMsg.remove();
+        }
     });
-});
-
-// Contact Form Submission
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const submitBtn = contactForm.querySelector('.btn-submit');
-        const originalText = submitBtn.innerHTML;
-        
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-        submitBtn.disabled = true;
-        
-        setTimeout(() => {
-            submitBtn.innerHTML = '<i class="fas fa-check"></i> Terkirim!';
-            submitBtn.style.background = '#b91c1c';
-            
-            // Show notification
-            showNotification('✨ Pesan berhasil terkirim! Saya akan menghubungi Anda segera.');
-            
-            contactForm.reset();
-            
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.style.background = '';
-                submitBtn.disabled = false;
-            }, 3000);
-        }, 1500);
-    });
-}
-
-// Notification System
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        padding: 15px 25px;
-        background: #dc2626;
-        color: white;
-        border-radius: 50px;
-        font-weight: 600;
-        z-index: 10001;
-        animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
-        box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
-        font-size: 0.9rem;
-    `;
-    notification.innerHTML = message;
-    document.body.appendChild(notification);
     
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
+    // Clear search
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            projectCards.forEach(card => {
+                card.style.display = 'block';
+            });
+            const noResultMsg = document.querySelector('.no-result');
+            if (noResultMsg) noResultMsg.remove();
+            searchInput.focus();
+        });
+    }
 }
 
-// Add notification animation styles
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(100px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    @keyframes fadeOut {
-        to {
-            opacity: 0;
-            visibility: hidden;
-        }
-    }
-`;
-document.head.appendChild(style);
+// ========================================
+// MODAL POPUP FOR PROJECTS
+// ========================================
+const modal = document.getElementById('projectModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+const closeBtn = document.querySelector('.modal-close');
 
-// AOS Initialization
-if (typeof AOS !== 'undefined') {
-    AOS.init({
-        duration: 800,
-        once: false,
-        offset: 100,
-        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-        mirror: true
-    });
+// Project Data
+const projectDetails = {
+    perpustakaan: {
+        title: 'Perpustakaan Digital',
+        description: `
+            <div class="project-detail">
+                <div class="detail-icon"><i class="fas fa-book-open"></i></div>
+                <h3>Aplikasi Perpustakaan Digital</h3>
+                <p>Sebuah aplikasi web untuk manajemen perpustakaan sekolah secara digital. Memudahkan siswa dan guru dalam mencari, meminjam, dan mengembalikan buku.</p>
+                
+                <h4>Fitur Utama:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Katalog buku digital</li>
+                    <li><i class="fas fa-check-circle"></i> Sistem peminjaman online</li>
+                    <li><i class="fas fa-check-circle"></i> Manajemen anggota perpustakaan</li>
+                    <li><i class="fas fa-check-circle"></i> Laporan peminjaman</li>
+                    <li><i class="fas fa-check-circle"></i> Notifikasi pengembalian</li>
+                </ul>
+                
+                <h4>Teknologi yang Digunakan:</h4>
+                <div class="detail-tech">
+                    <span>HTML5</span>
+                    <span>CSS3</span>
+                    <span>JavaScript</span>
+                    <span>PHP</span>
+                    <span>MySQL</span>
+                    <span>Bootstrap</span>
+                </div>
+                
+                <div class="detail-links">
+                    <a href="#" class="btn-demo"><i class="fab fa-github"></i> Lihat Source Code</a>
+                </div>
+            </div>
+        `
+    },
+    toko: {
+        title: 'Toko Online',
+        description: `
+            <div class="project-detail">
+                <div class="detail-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h3>Website E-Commerce Modern</h3>
+                <p>Platform belanja online dengan fitur lengkap untuk pengalaman berbelanja yang mudah dan aman.</p>
+                
+                <h4>Fitur Utama:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Katalog produk lengkap</li>
+                    <li><i class="fas fa-check-circle"></i> Keranjang belanja</li>
+                    <li><i class="fas fa-check-circle"></i> Sistem pembayaran online</li>
+                    <li><i class="fas fa-check-circle"></i> Manajemen stok produk</li>
+                    <li><i class="fas fa-check-circle"></i> Dashboard admin</li>
+                    <li><i class="fas fa-check-circle"></i> Sistem rating dan review</li>
+                </ul>
+                
+                <h4>Teknologi yang Digunakan:</h4>
+                <div class="detail-tech">
+                    <span>React.js</span>
+                    <span>Node.js</span>
+                    <span>Express</span>
+                    <span>MongoDB</span>
+                    <span>Tailwind CSS</span>
+                </div>
+                
+                <div class="detail-links">
+                    <a href="#" class="btn-demo"><i class="fab fa-github"></i> Lihat Source Code</a>
+                </div>
+            </div>
+        `
+    },
+    smk: {
+        title: 'Profil SMK Pramaartha',
+        description: `
+            <div class="project-detail">
+                <div class="detail-icon"><i class="fas fa-school"></i></div>
+                <h3>Website Profil SMK Swasta Pramaartha</h3>
+                <p>Website profil sekolah modern yang menampilkan informasi lengkap tentang SMK Swasta Pramaartha.</p>
+                
+                <h4>Fitur Utama:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Profil sekolah dan visi misi</li>
+                    <li><i class="fas fa-check-circle"></i> Informasi jurusan PPLG</li>
+                    <li><i class="fas fa-check-circle"></i> Galeri kegiatan sekolah</li>
+                    <li><i class="fas fa-check-circle"></i> Prestasi siswa</li>
+                    <li><i class="fas fa-check-circle"></i> Form pendaftaran online</li>
+                    <li><i class="fas fa-check-circle"></i> Responsive design</li>
+                </ul>
+                
+                <h4>Teknologi yang Digunakan:</h4>
+                <div class="detail-tech">
+                    <span>HTML5</span>
+                    <span>CSS3</span>
+                    <span>JavaScript</span>
+                    <span>Tailwind CSS</span>
+                    <span>AOS Animation</span>
+                </div>
+                
+                <div class="detail-links">
+                    <a href="#" class="btn-demo"><i class="fab fa-github"></i> Lihat Source Code</a>
+                </div>
+            </div>
+        `
+    }
+};
+
+// Open Modal Function
+function openProjectModal(projectId) {
+    const project = projectDetails[projectId];
+    if (project) {
+        modalTitle.innerHTML = project.title;
+        modalBody.innerHTML = project.description;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Add animation
+        modal.style.animation = 'fadeIn 0.3s ease';
+    }
+}
+
+// Close Modal
+if (closeBtn) {
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 }
 
 // Counter Animation
 const counters = document.querySelectorAll('.stat-number');
-const counterObserver = new IntersectionObserver((entries) => {
+const counterObserver2 = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const counter = entry.target;
@@ -316,14 +403,14 @@ const counterObserver = new IntersectionObserver((entries) => {
                 }
             };
             updateCounter();
-            counterObserver.unobserve(counter);
+            counterObserver2.unobserve(counter);
         }
     });
 }, { threshold: 0.5 });
 
-counters.forEach(counter => counterObserver.observe(counter));
+counters.forEach(counter => counterObserver2.observe(counter));
 
-// Parallax Effect on Hero
+// Parallax Effect
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const heroBg = document.querySelector('.hero-bg');
@@ -331,6 +418,17 @@ window.addEventListener('scroll', () => {
         heroBg.style.transform = `translateY(${scrolled * 0.3}px)`;
     }
 });
+
+// AOS Initialization
+if (typeof AOS !== 'undefined') {
+    AOS.init({
+        duration: 800,
+        once: false,
+        offset: 100,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        mirror: true
+    });
+}
 
 // Dynamic Footer Year
 const footerYear = document.querySelector('.footer-bottom p:first-child');
