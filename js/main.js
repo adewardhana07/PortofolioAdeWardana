@@ -187,38 +187,34 @@ if (searchInput) {
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
         
-        // Show/hide clear button
         if (searchTerm.length > 0) {
-            clearBtn.style.display = 'flex';
+            if (clearBtn) clearBtn.style.display = 'flex';
         } else {
-            clearBtn.style.display = 'none';
+            if (clearBtn) clearBtn.style.display = 'none';
         }
         
-        // Filter projects
+        let visibleCount = 0;
         projectCards.forEach(card => {
-            const projectName = card.getAttribute('data-name') || '';
             const title = card.querySelector('h3')?.innerText.toLowerCase() || '';
             const desc = card.querySelector('p')?.innerText.toLowerCase() || '';
             
-            if (title.includes(searchTerm) || desc.includes(searchTerm) || projectName.includes(searchTerm)) {
+            if (title.includes(searchTerm) || desc.includes(searchTerm)) {
                 card.style.display = 'block';
                 card.style.animation = 'fadeInUp 0.5s ease';
+                visibleCount++;
             } else {
                 card.style.display = 'none';
             }
         });
         
-        // Show message if no results
-        const visibleCards = document.querySelectorAll('.project-card[style*="display: block"], .project-card:not([style*="display: none"])');
         let noResultMsg = document.querySelector('.no-result');
-        
-        if (visibleCards.length === 0 && projectCards.length > 0) {
+        if (visibleCount === 0 && projectCards.length > 0) {
             if (!noResultMsg) {
                 noResultMsg = document.createElement('div');
                 noResultMsg.className = 'no-result';
                 noResultMsg.innerHTML = `
                     <i class="fas fa-search"></i>
-                    <p>Tidak ada project yang ditemukan untuk "${searchTerm}"</p>
+                    <p>Tidak ada project yang ditemukan</p>
                 `;
                 document.querySelector('.projects-grid').after(noResultMsg);
             }
@@ -227,164 +223,23 @@ if (searchInput) {
         }
     });
     
-    // Clear search
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            clearBtn.style.display = 'none';
+            if (searchInput) searchInput.value = '';
+            if (clearBtn) clearBtn.style.display = 'none';
             projectCards.forEach(card => {
                 card.style.display = 'block';
             });
             const noResultMsg = document.querySelector('.no-result');
             if (noResultMsg) noResultMsg.remove();
-            searchInput.focus();
+            if (searchInput) searchInput.focus();
         });
-    }
-}
-
-// ========================================
-// MODAL POPUP FOR PROJECTS
-// ========================================
-const modal = document.getElementById('projectModal');
-const modalTitle = document.getElementById('modalTitle');
-const modalBody = document.getElementById('modalBody');
-const closeBtn = document.querySelector('.modal-close');
-
-// Project Data
-const projectDetails = {
-    perpustakaan: {
-        title: 'Perpustakaan Digital',
-        description: `
-            <div class="project-detail">
-                <div class="detail-icon"><i class="fas fa-book-open"></i></div>
-                <h3>Aplikasi Perpustakaan Digital</h3>
-                <p>Sebuah aplikasi web untuk manajemen perpustakaan sekolah secara digital. Memudahkan siswa dan guru dalam mencari, meminjam, dan mengembalikan buku.</p>
-                
-                <h4>Fitur Utama:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> Katalog buku digital</li>
-                    <li><i class="fas fa-check-circle"></i> Sistem peminjaman online</li>
-                    <li><i class="fas fa-check-circle"></i> Manajemen anggota perpustakaan</li>
-                    <li><i class="fas fa-check-circle"></i> Laporan peminjaman</li>
-                    <li><i class="fas fa-check-circle"></i> Notifikasi pengembalian</li>
-                </ul>
-                
-                <h4>Teknologi yang Digunakan:</h4>
-                <div class="detail-tech">
-                    <span>HTML5</span>
-                    <span>CSS3</span>
-                    <span>JavaScript</span>
-                    <span>PHP</span>
-                    <span>MySQL</span>
-                    <span>Bootstrap</span>
-                </div>
-                
-                <div class="detail-links">
-                    <a href="#" class="btn-demo"><i class="fab fa-github"></i> Lihat Source Code</a>
-                </div>
-            </div>
-        `
-    },
-    toko: {
-        title: 'Toko Online',
-        description: `
-            <div class="project-detail">
-                <div class="detail-icon"><i class="fas fa-shopping-cart"></i></div>
-                <h3>Website E-Commerce Modern</h3>
-                <p>Platform belanja online dengan fitur lengkap untuk pengalaman berbelanja yang mudah dan aman.</p>
-                
-                <h4>Fitur Utama:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> Katalog produk lengkap</li>
-                    <li><i class="fas fa-check-circle"></i> Keranjang belanja</li>
-                    <li><i class="fas fa-check-circle"></i> Sistem pembayaran online</li>
-                    <li><i class="fas fa-check-circle"></i> Manajemen stok produk</li>
-                    <li><i class="fas fa-check-circle"></i> Dashboard admin</li>
-                    <li><i class="fas fa-check-circle"></i> Sistem rating dan review</li>
-                </ul>
-                
-                <h4>Teknologi yang Digunakan:</h4>
-                <div class="detail-tech">
-                    <span>React.js</span>
-                    <span>Node.js</span>
-                    <span>Express</span>
-                    <span>MongoDB</span>
-                    <span>Tailwind CSS</span>
-                </div>
-                
-                <div class="detail-links">
-                    <a href="#" class="btn-demo"><i class="fab fa-github"></i> Lihat Source Code</a>
-                </div>
-            </div>
-        `
-    },
-    smk: {
-        title: 'Profil SMK Pramaartha',
-        description: `
-            <div class="project-detail">
-                <div class="detail-icon"><i class="fas fa-school"></i></div>
-                <h3>Website Profil SMK Swasta Pramaartha</h3>
-                <p>Website profil sekolah modern yang menampilkan informasi lengkap tentang SMK Swasta Pramaartha.</p>
-                
-                <h4>Fitur Utama:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> Profil sekolah dan visi misi</li>
-                    <li><i class="fas fa-check-circle"></i> Informasi jurusan PPLG</li>
-                    <li><i class="fas fa-check-circle"></i> Galeri kegiatan sekolah</li>
-                    <li><i class="fas fa-check-circle"></i> Prestasi siswa</li>
-                    <li><i class="fas fa-check-circle"></i> Form pendaftaran online</li>
-                    <li><i class="fas fa-check-circle"></i> Responsive design</li>
-                </ul>
-                
-                <h4>Teknologi yang Digunakan:</h4>
-                <div class="detail-tech">
-                    <span>HTML5</span>
-                    <span>CSS3</span>
-                    <span>JavaScript</span>
-                    <span>Tailwind CSS</span>
-                    <span>AOS Animation</span>
-                </div>
-                
-                <div class="detail-links">
-                    <a href="#" class="btn-demo"><i class="fab fa-github"></i> Lihat Source Code</a>
-                </div>
-            </div>
-        `
-    }
-};
-
-// Open Modal Function
-function openProjectModal(projectId) {
-    const project = projectDetails[projectId];
-    if (project) {
-        modalTitle.innerHTML = project.title;
-        modalBody.innerHTML = project.description;
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        
-        // Add animation
-        modal.style.animation = 'fadeIn 0.3s ease';
-    }
-}
-
-// Close Modal
-if (closeBtn) {
-    closeBtn.onclick = function() {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-}
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
     }
 }
 
 // Counter Animation
 const counters = document.querySelectorAll('.stat-number');
-const counterObserver2 = new IntersectionObserver((entries) => {
+const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const counter = entry.target;
@@ -403,12 +258,12 @@ const counterObserver2 = new IntersectionObserver((entries) => {
                 }
             };
             updateCounter();
-            counterObserver2.unobserve(counter);
+            counterObserver.unobserve(counter);
         }
     });
 }, { threshold: 0.5 });
 
-counters.forEach(counter => counterObserver2.observe(counter));
+counters.forEach(counter => counterObserver.observe(counter));
 
 // Parallax Effect
 window.addEventListener('scroll', () => {
@@ -436,59 +291,11 @@ if (footerYear) {
     const year = new Date().getFullYear();
     footerYear.innerHTML = `&copy; ${year} Ade Wardhana - 11 PPLG 1 | SMK Swasta Pramaartha. All Rights Reserved.`;
 }
-// ========================================
-// RESPONSIVE HANDLING UNTUK HP
-// ========================================
 
-// Cek apakah device mobile
-function isMobile() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-}
-
-// Sembunyikan custom cursor di mobile
-if (isMobile()) {
+// Cek device mobile untuk cursor
+if (window.innerWidth <= 768) {
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
     if (cursorDot) cursorDot.style.display = 'none';
     if (cursorOutline) cursorOutline.style.display = 'none';
 }
-
-// Touch feedback untuk mobile
-if (isMobile()) {
-    const touchElements = document.querySelectorAll('.project-card, .contact-item, .tool-item, .btn-primary, .btn-outline');
-    touchElements.forEach(el => {
-        el.addEventListener('touchstart', function() {
-            this.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
-        });
-    });
-}
-
-// Fix viewport height untuk mobile (menangani address bar)
-function setVH() {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
-setVH();
-window.addEventListener('resize', setVH);
-
-// Smooth scroll untuk mobile
-document.querySelectorAll('.nav-link, .btn-primary, .btn-outline').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href && href.startsWith('#')) {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-                const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 60;
-                const targetPosition = target.offsetTop - navbarHeight;
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        }
-    });
-});
