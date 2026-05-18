@@ -436,3 +436,59 @@ if (footerYear) {
     const year = new Date().getFullYear();
     footerYear.innerHTML = `&copy; ${year} Ade Wardhana - 11 PPLG 1 | SMK Swasta Pramaartha. All Rights Reserved.`;
 }
+// ========================================
+// RESPONSIVE HANDLING UNTUK HP
+// ========================================
+
+// Cek apakah device mobile
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+}
+
+// Sembunyikan custom cursor di mobile
+if (isMobile()) {
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+    if (cursorDot) cursorDot.style.display = 'none';
+    if (cursorOutline) cursorOutline.style.display = 'none';
+}
+
+// Touch feedback untuk mobile
+if (isMobile()) {
+    const touchElements = document.querySelectorAll('.project-card, .contact-item, .tool-item, .btn-primary, .btn-outline');
+    touchElements.forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+}
+
+// Fix viewport height untuk mobile (menangani address bar)
+function setVH() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+setVH();
+window.addEventListener('resize', setVH);
+
+// Smooth scroll untuk mobile
+document.querySelectorAll('.nav-link, .btn-primary, .btn-outline').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 60;
+                const targetPosition = target.offsetTop - navbarHeight;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    });
+});
