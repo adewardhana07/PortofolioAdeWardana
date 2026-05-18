@@ -1,20 +1,28 @@
 // ========================================
 // PREMIUM PORTFOLIO - RED & BLACK THEME
+// MAIN JAVASCRIPT FILE
 // ========================================
 
 // Preloader
 window.addEventListener('load', () => {
     const preloader = document.querySelector('.preloader');
-    setTimeout(() => {
-        preloader.style.opacity = '0';
+    if (preloader) {
         setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 500);
-    }, 1500);
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        }, 1500);
+    }
 });
 
+// Cek apakah device mobile
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+}
+
 // Custom Cursor (Desktop only)
-if (window.innerWidth > 768) {
+if (!isMobile()) {
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
     
@@ -39,41 +47,52 @@ if (window.innerWidth > 768) {
                 cursorOutline.style.width = '60px';
                 cursorOutline.style.height = '60px';
                 cursorOutline.style.borderColor = '#dc2626';
+                cursorOutline.style.backgroundColor = 'rgba(220,38,38,0.1)';
             });
             el.addEventListener('mouseleave', () => {
                 cursorOutline.style.width = '35px';
                 cursorOutline.style.height = '35px';
                 cursorOutline.style.borderColor = '#dc2626';
+                cursorOutline.style.backgroundColor = 'transparent';
             });
         });
     }
+} else {
+    // Sembunyikan custom cursor di mobile
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+    if (cursorDot) cursorDot.style.display = 'none';
+    if (cursorOutline) cursorOutline.style.display = 'none';
 }
 
 // Navbar Scroll Effect
 const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
+if (navbar) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
 
 // Mobile Menu Toggle
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
-if (navToggle) {
+if (navToggle && navMenu) {
     navToggle.addEventListener('click', () => {
         navToggle.classList.toggle('active');
         navMenu.classList.toggle('active');
     });
 }
 
+// Close mobile menu on link click
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-        navToggle?.classList.remove('active');
-        navMenu?.classList.remove('active');
+        if (navToggle) navToggle.classList.remove('active');
+        if (navMenu) navMenu.classList.remove('active');
     });
 });
 
@@ -107,6 +126,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 behavior: 'smooth'
             });
         }
+        
+        // Tutup mobile menu
+        if (navToggle && navMenu) {
+            navToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+        }
     });
 });
 
@@ -114,67 +139,71 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const sections = document.querySelectorAll('section');
 const navLinks = document.querySelectorAll('.nav-link');
 
-window.addEventListener('scroll', () => {
-    let current = '';
-    const scrollPosition = window.scrollY + 200;
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionBottom = sectionTop + section.offsetHeight;
+if (sections.length && navLinks.length) {
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const scrollPosition = window.scrollY + 200;
         
-        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-            current = section.getAttribute('id');
-        }
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href')?.replace('#', '');
+            if (href === current) {
+                link.classList.add('active');
+            }
+        });
     });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        const href = link.getAttribute('href')?.replace('#', '');
-        if (href === current) {
-            link.classList.add('active');
-        }
-    });
-});
+}
 
 // Progress Bar Animation
 const progressBars = document.querySelectorAll('.progress');
-const observerOptions = {
-    threshold: 0.5,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const bar = entry.target;
-            const width = bar.getAttribute('data-width');
-            if (width) {
-                const parent = bar.closest('.skill-item');
-                const percentSpan = parent?.querySelector('.skill-info span:last-child');
-                
-                if (percentSpan) {
-                    let count = 0;
-                    const targetPercent = parseInt(width);
-                    const interval = setInterval(() => {
-                        if (count >= targetPercent) {
-                            clearInterval(interval);
-                        } else {
-                            count++;
-                            percentSpan.textContent = count + '%';
-                        }
-                    }, 20);
+if (progressBars.length) {
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const bar = entry.target;
+                const width = bar.getAttribute('data-width');
+                if (width) {
+                    const parent = bar.closest('.skill-item');
+                    const percentSpan = parent?.querySelector('.skill-info span:last-child');
+                    
+                    if (percentSpan) {
+                        let count = 0;
+                        const targetPercent = parseInt(width);
+                        const interval = setInterval(() => {
+                            if (count >= targetPercent) {
+                                clearInterval(interval);
+                            } else {
+                                count++;
+                                percentSpan.textContent = count + '%';
+                            }
+                        }, 20);
+                    }
+                    
+                    setTimeout(() => {
+                        bar.style.width = width + '%';
+                    }, 200);
                 }
-                
-                setTimeout(() => {
-                    bar.style.width = width + '%';
-                }, 200);
+                observer.unobserve(bar);
             }
-            observer.unobserve(bar);
-        }
-    });
-}, observerOptions);
-
-progressBars.forEach(bar => observer.observe(bar));
+        });
+    }, observerOptions);
+    
+    progressBars.forEach(bar => observer.observe(bar));
+}
 
 // ========================================
 // SEARCH FUNCTIONALITY
@@ -183,22 +212,25 @@ const searchInput = document.getElementById('searchInput');
 const clearBtn = document.getElementById('searchClear');
 const projectCards = document.querySelectorAll('.project-card');
 
-if (searchInput) {
+if (searchInput && projectCards.length) {
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
         
-        if (searchTerm.length > 0) {
-            if (clearBtn) clearBtn.style.display = 'flex';
-        } else {
-            if (clearBtn) clearBtn.style.display = 'none';
+        if (clearBtn) {
+            if (searchTerm.length > 0) {
+                clearBtn.style.display = 'flex';
+            } else {
+                clearBtn.style.display = 'none';
+            }
         }
         
         let visibleCount = 0;
         projectCards.forEach(card => {
             const title = card.querySelector('h3')?.innerText.toLowerCase() || '';
             const desc = card.querySelector('p')?.innerText.toLowerCase() || '';
+            const dataName = card.getAttribute('data-name') || '';
             
-            if (title.includes(searchTerm) || desc.includes(searchTerm)) {
+            if (title.includes(searchTerm) || desc.includes(searchTerm) || dataName.includes(searchTerm)) {
                 card.style.display = 'block';
                 card.style.animation = 'fadeInUp 0.5s ease';
                 visibleCount++;
@@ -208,15 +240,16 @@ if (searchInput) {
         });
         
         let noResultMsg = document.querySelector('.no-result');
-        if (visibleCount === 0 && projectCards.length > 0) {
+        if (visibleCount === 0) {
             if (!noResultMsg) {
                 noResultMsg = document.createElement('div');
                 noResultMsg.className = 'no-result';
                 noResultMsg.innerHTML = `
                     <i class="fas fa-search"></i>
-                    <p>Tidak ada project yang ditemukan</p>
+                    <p>Tidak ada project yang ditemukan untuk "${searchTerm}"</p>
                 `;
-                document.querySelector('.projects-grid').after(noResultMsg);
+                const projectsGrid = document.querySelector('.projects-grid');
+                if (projectsGrid) projectsGrid.after(noResultMsg);
             }
         } else {
             if (noResultMsg) noResultMsg.remove();
@@ -225,51 +258,56 @@ if (searchInput) {
     
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
-            if (searchInput) searchInput.value = '';
-            if (clearBtn) clearBtn.style.display = 'none';
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.focus();
+            }
+            clearBtn.style.display = 'none';
             projectCards.forEach(card => {
                 card.style.display = 'block';
             });
             const noResultMsg = document.querySelector('.no-result');
             if (noResultMsg) noResultMsg.remove();
-            if (searchInput) searchInput.focus();
         });
     }
 }
 
 // Counter Animation
 const counters = document.querySelectorAll('.stat-number');
-const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const counter = entry.target;
-            const target = parseInt(counter.innerText);
-            let count = 0;
-            const duration = 2000;
-            const increment = target / (duration / 16);
-            
-            const updateCounter = () => {
-                count += increment;
-                if (count < target) {
-                    counter.innerText = Math.floor(count) + '+';
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    counter.innerText = target + '+';
-                }
-            };
-            updateCounter();
-            counterObserver.unobserve(counter);
-        }
-    });
-}, { threshold: 0.5 });
-
-counters.forEach(counter => counterObserver.observe(counter));
+if (counters.length) {
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.innerText);
+                let count = 0;
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                
+                const updateCounter = () => {
+                    count += increment;
+                    if (count < target) {
+                        counter.innerText = Math.floor(count) + '+';
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.innerText = target + '+';
+                    }
+                };
+                updateCounter();
+                counterObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    counters.forEach(counter => counterObserver.observe(counter));
+}
 
 // Parallax Effect
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const heroBg = document.querySelector('.hero-bg');
-    if (heroBg) {
+    if (heroBg && !isMobile()) {
         heroBg.style.transform = `translateY(${scrolled * 0.3}px)`;
     }
 });
@@ -281,7 +319,8 @@ if (typeof AOS !== 'undefined') {
         once: false,
         offset: 100,
         easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-        mirror: true
+        mirror: true,
+        disable: isMobile() ? 'mobile' : false
     });
 }
 
@@ -292,10 +331,49 @@ if (footerYear) {
     footerYear.innerHTML = `&copy; ${year} Ade Wardhana - 11 PPLG 1 | SMK Swasta Pramaartha. All Rights Reserved.`;
 }
 
-// Cek device mobile untuk cursor
-if (window.innerWidth <= 768) {
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorOutline = document.querySelector('.cursor-outline');
-    if (cursorDot) cursorDot.style.display = 'none';
-    if (cursorOutline) cursorOutline.style.display = 'none';
+// Touch feedback untuk mobile
+if (isMobile()) {
+    const touchElements = document.querySelectorAll('.project-card, .contact-item, .tool-item, .btn-primary, .btn-outline, .action-btn');
+    touchElements.forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
 }
+
+// Fix viewport height untuk mobile
+function setVH() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+setVH();
+window.addEventListener('resize', setVH);
+
+// Tambahkan style untuk no result
+const noResultStyle = document.createElement('style');
+noResultStyle.textContent = `
+    .no-result {
+        text-align: center;
+        padding: 50px;
+        color: rgba(255,255,255,0.5);
+    }
+    .no-result i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: var(--red-primary);
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+`;
+document.head.appendChild(noResultStyle);
