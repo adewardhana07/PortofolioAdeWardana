@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>Ade Wardhana | Portfolio Premium - Red & Black</title>
     
     <!-- Fonts & Icons -->
@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <!-- Custom Cursor -->
+    <!-- Custom Cursor (Sembunyikan di HP) -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
@@ -219,7 +219,7 @@
             </div>
             
             <div class="projects-grid">
-                <!-- Project 1: Perpustakaan Digital -->
+                <!-- Project 1: Perpustakaan Digital - Bisa Langsung Diakses -->
                 <div class="project-card" data-name="perpustakaan digital library buku" data-aos="fade-up" data-aos-delay="200">
                     <div class="project-image">
                         <div class="project-placeholder">
@@ -227,7 +227,8 @@
                             <div class="placeholder-animation"></div>
                         </div>
                         <div class="project-overlay">
-                            <a href="#" class="project-link" onclick="openProjectModal('perpustakaan')"><i class="fas fa-eye"></i> Lihat Project</a>
+                            <a href="https://github.com/yourusername/perpustakaan-digital" target="_blank" class="project-link"><i class="fab fa-github"></i> Source Code</a>
+                            <a href="#" class="project-link demo-link" onclick="showDemoAlert('perpustakaan')"><i class="fas fa-eye"></i> Live Demo</a>
                         </div>
                     </div>
                     <div class="project-info">
@@ -240,10 +241,14 @@
                             <span>PHP</span>
                             <span>MySQL</span>
                         </div>
+                        <div class="project-actions">
+                            <a href="https://github.com/yourusername/perpustakaan-digital" target="_blank" class="action-btn github-btn"><i class="fab fa-github"></i> GitHub</a>
+                            <a href="#" class="action-btn demo-btn" onclick="showDemoAlert('perpustakaan')"><i class="fas fa-play"></i> Demo</a>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Project 2: Toko Online -->
+                <!-- Project 2: Toko Online - Bisa Langsung Diakses -->
                 <div class="project-card" data-name="toko online e-commerce shop belanja" data-aos="fade-up" data-aos-delay="300">
                     <div class="project-image">
                         <div class="project-placeholder">
@@ -251,7 +256,8 @@
                             <div class="placeholder-animation"></div>
                         </div>
                         <div class="project-overlay">
-                            <a href="#" class="project-link" onclick="openProjectModal('toko')"><i class="fas fa-eye"></i> Lihat Project</a>
+                            <a href="https://github.com/yourusername/toko-online" target="_blank" class="project-link"><i class="fab fa-github"></i> Source Code</a>
+                            <a href="#" class="project-link demo-link" onclick="showDemoAlert('toko')"><i class="fas fa-eye"></i> Live Demo</a>
                         </div>
                     </div>
                     <div class="project-info">
@@ -263,10 +269,14 @@
                             <span>MongoDB</span>
                             <span>Express</span>
                         </div>
+                        <div class="project-actions">
+                            <a href="https://github.com/yourusername/toko-online" target="_blank" class="action-btn github-btn"><i class="fab fa-github"></i> GitHub</a>
+                            <a href="#" class="action-btn demo-btn" onclick="showDemoAlert('toko')"><i class="fas fa-play"></i> Demo</a>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Project 3: Profil SMK PK -->
+                <!-- Project 3: Profil SMK PK - Bisa Langsung Diakses -->
                 <div class="project-card" data-name="profil smk pk sekolah pramaartha" data-aos="fade-up" data-aos-delay="400">
                     <div class="project-image">
                         <div class="project-placeholder">
@@ -274,7 +284,8 @@
                             <div class="placeholder-animation"></div>
                         </div>
                         <div class="project-overlay">
-                            <a href="#" class="project-link" onclick="openProjectModal('smk')"><i class="fas fa-eye"></i> Lihat Project</a>
+                            <a href="https://github.com/yourusername/profil-smk-pramaartha" target="_blank" class="project-link"><i class="fab fa-github"></i> Source Code</a>
+                            <a href="#" class="project-link demo-link" onclick="showDemoAlert('smk')"><i class="fas fa-eye"></i> Live Demo</a>
                         </div>
                     </div>
                     <div class="project-info">
@@ -286,24 +297,15 @@
                             <span>JavaScript</span>
                             <span>Tailwind</span>
                         </div>
+                        <div class="project-actions">
+                            <a href="https://github.com/yourusername/profil-smk-pramaartha" target="_blank" class="action-btn github-btn"><i class="fab fa-github"></i> GitHub</a>
+                            <a href="#" class="action-btn demo-btn" onclick="showDemoAlert('smk')"><i class="fas fa-play"></i> Demo</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Modal Popup untuk Project Detail -->
-    <div id="projectModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Detail Project</h2>
-                <span class="modal-close">&times;</span>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Konten modal akan diisi oleh JavaScript -->
-            </div>
-        </div>
-    </div>
 
     <!-- Skills Section -->
     <section id="skills" class="skills">
@@ -421,7 +423,7 @@
         </div>
     </section>
 
-    <!-- Contact Section (Tanpa Form Kirim Pesan) -->
+    <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
@@ -431,14 +433,17 @@
             </div>
             <div class="contact-wrapper-simple">
                 <div class="contact-card-large" data-aos="fade-up" data-aos-delay="100">
-                    <div class="contact-item" onclick="window.open('https://www.instagram.com/adewardana41', '_blank')" style="cursor: pointer;">
-                        <div class="contact-icon"><i class="fab fa-instagram"></i></div>
-                        <div class="contact-detail">
-                            <h4>Instagram</h4>
-                            <p>@adewardana41</p>
+                    <!-- Instagram - Langsung ke @dana_aade -->
+                    <a href="https://www.instagram.com/dana_aade" target="_blank" class="contact-item-link">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+                            <div class="contact-detail">
+                                <h4>Instagram</h4>
+                                <p>@dana_aade</p>
+                            </div>
+                            <i class="fas fa-external-link-alt" style="margin-left: auto; color: rgba(255,255,255,0.3);"></i>
                         </div>
-                        <i class="fas fa-external-link-alt" style="margin-left: auto; color: rgba(255,255,255,0.3);"></i>
-                    </div>
+                    </a>
                     <div class="contact-item">
                         <div class="contact-icon"><i class="fab fa-github"></i></div>
                         <div class="contact-detail">
@@ -488,7 +493,7 @@
                     <a href="#contact">Contact</a>
                 </div>
                 <div class="footer-social">
-                    <a href="https://www.instagram.com/adewardana41" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/dana_aade" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-github"></i></a>
                     <a href="#"><i class="fab fa-linkedin"></i></a>
                     <a href="#"><i class="fab fa-tiktok"></i></a>
@@ -505,5 +510,79 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <script src="js/main.js"></script>
+    
+    <script>
+        // Fungsi untuk menampilkan alert demo (karena belum ada hosting)
+        function showDemoAlert(project) {
+            let projectName = '';
+            let demoUrl = '';
+            
+            switch(project) {
+                case 'perpustakaan':
+                    projectName = 'Perpustakaan Digital';
+                    demoUrl = 'https://github.com/yourusername/perpustakaan-digital';
+                    break;
+                case 'toko':
+                    projectName = 'Toko Online';
+                    demoUrl = 'https://github.com/yourusername/toko-online';
+                    break;
+                case 'smk':
+                    projectName = 'Profil SMK Pramaartha';
+                    demoUrl = 'https://github.com/yourusername/profil-smk-pramaartha';
+                    break;
+            }
+            
+            // Tampilkan notifikasi
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #dc2626;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 50px;
+                z-index: 10001;
+                font-weight: 600;
+                box-shadow: 0 10px 30px rgba(220,38,38,0.3);
+                animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+                text-align: center;
+                white-space: nowrap;
+            `;
+            notification.innerHTML = `✨ Demo ${projectName} akan segera hadir! ✨`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+        
+        // Tambahkan style untuk animasi
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateX(-50%) translateY(50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+            }
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Sembunyikan custom cursor di HP
+        if (window.innerWidth <= 768) {
+            document.querySelector('.cursor-dot')?.remove();
+            document.querySelector('.cursor-outline')?.remove();
+        }
+    </script>
 </body>
 </html>
